@@ -107,6 +107,39 @@ const ReviewToPhotos = mongoose.model('ReviewToPhotos', reviewsToPhotosSchema, '
 //     console.log('ReviewToPhotos 3 docs check success: ', res);
 //   });
 
+
+
+
+
+
+// Characteristic.aggregate([
+//   { $group: {_id: '$product_id', characteristics: { $push: '$id' } } },
+//   { $out: { db: 'sdc_deploy', coll: 'products_to_characteristics' } }
+//   ])
+//   .option({ allowDiskUse: true, maxTimeMS: 900000 })
+//   .then((res) => {
+//     console.log('"products_to_characteristics" collection build success: ', res);
+//   })
+//   .catch((err) => {
+//     console.error('ERROR! "products_to_characteristics" collection build ERROR: ', err);
+//   });
+const productsToCharacteristicsSchema = new mongoose.Schema({
+  _id: String,
+  characteristics: [String]
+});
+const ProductToCharacteristics = mongoose.model('ProductToCharacteristics', productsToCharacteristicsSchema, 'products_to_characteristics');
+ProductToCharacteristics.find({})
+  .limit(3)
+  .exec((err, res) => {
+    if (err) { return console.error('ERROR! ProductToCharacteristics 3 docs check ERROR: ', err); }
+    console.log('ProductToCharacteristics 3 docs check success: ', res);
+  });
+
+
+
+
+
+
 module.exports = {
   db: db
 }
