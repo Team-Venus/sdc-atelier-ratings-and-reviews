@@ -4,7 +4,12 @@
   "description": "System redesign for Atelier Project Catwalk's Single Product Ratings and Reviews widget.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "csv-reviews-import": "mongoimport --db=sdc_deploy --collection=reviews  --type=csv --headerline --file=./csv_data/reviews.csv" ,
+    "csv-reviews_photos-import": "mongoimport --db=sdc_deploy --collection=reviews_photos  --type=csv --headerline --file=./csv_data/reviews_photos.csv" ,
+    "csv-characteristics-import": "mongoimport --db=sdc_deploy --collection=characteristics  --type=csv --headerline --file=./csv_data/characteristics.csv" ,
+    "csv-characteristic-reviews-import": "mongoimport --db=sdc_deploy --collection=characteristic_reviews  --type=csv --headerline --file=./csv_data/characteristic_reviews.csv",
+    "bulk-import": "npm run csv-reviews-import && npm run csv-reviews_photos-import && npm run csv-characteristics-import && npm run csv-characteristic-reviews-import"
   },
   "repository": {
     "type": "git",

@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/sdc_new', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb://localhost/sdc_deploy', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 
 const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'database connection error:'));
 
+console.log('successful database connection');
 db.once('open', function() {
-  console.log('successful database connection');
 });
 
 const reviewsSchema = new mongoose.Schema({
@@ -24,35 +24,46 @@ const reviewsSchema = new mongoose.Schema({
   response: String,
   helpfulness: String
 });
+reviewsSchema.index({ id: 1 });
+reviewsSchema.index({ product_id: 1 });
+const Review = mongoose.model('Review', reviewsSchema, 'reviews');
+// Review.find({})
+//   .limit(5)
+//   .exec((err, reviews) => {
+//     if (err) { return console.error(err) }
+//     console.log(reviews);
+//   });
+const reviewsPhotosSchema = new mongoose.Schema({
+  id: String,
+  review_id: String,
+  url: String
+});
+reviewsPhotosSchema.index({ id: 1 });
+reviewsPhotosSchema.index({ review_id: 1 });
+const ReviewPhoto = mongoose.model('ReviewPhoto', reviewsPhotosSchema, 'reviews_photos');
+//
+const characteristicsSchema = new mongoose.Schema({
+  id: String,
+  product_id: String,
+  name: String
+});
+characteristicsSchema.index({ id: 1 })
+characteristicsSchema.index({ product_id: 1 });
+const Characteristic = mongoose.model('Characteristic', characteristicsSchema, 'characteristics');
+const characteristicReviewsSchema = new mongoose.Schema({
+  id: String,
+  review_id: String,
+  characteristic_id: String,
+  value: String
+});
+characteristicReviewsSchema.index({ id: 1 });
+characteristicReviewsSchema.index({ review_id: 1 });
+characteristicReviewsSchema.index({ characteristic_id: 1 });
+const CharacteristicReview = mongoose.model('CharacteristicReview', characteristicReviewsSchema, 'characteristic_reviews');
 
-const Review = mongoose.model('Reviews', reviewsSchema);
-
-const insertLine = (lineToInsert, collection) => {
-  if (collection === 'reviews') {
-    const reviewParse = {
-      id: lineToInsert[0],
-      product_id: lineToInsert[1],
-      rating: lineToInsert[2],
-      date: lineToInsert[3],
-      summary: lineToInsert[4],
-      body: lineToInsert[5],
-      recommend: lineToInsert[6],
-      reported: lineToInsert[7],
-      reviewer_name: lineToInsert[8],
-      reviewer_email: lineToInsert[9],
-      response: lineToInsert[10],
-      helpfulness: lineToInsert[11]
-    }
-    const review = new Review(reviewParse);
-    review.save((err) => {
-      if (err) { console.error( err ); }
-    });
-  }
-};
 
 module.exports = {
-  db: db,
-  insertLine: insertLine
+  db: db
 }
 
 // var productSchema = new mongoose.Schema({
