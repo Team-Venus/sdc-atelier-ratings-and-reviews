@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/sdc_deploy', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
+mongoose.connect('mongodb://localhost/sdc_deploy', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true
+});
 
 const db = mongoose.connection;
 
@@ -24,47 +28,90 @@ const reviewsSchema = new mongoose.Schema({
   response: String,
   helpfulness: String
 });
-reviewsSchema.index({ id: 1 });
-reviewsSchema.index({ product_id: 1 });
+// reviewsSchema.index({ id: 1 });
+// reviewsSchema.index({ product_id: 1 });
 const Review = mongoose.model('Review', reviewsSchema, 'reviews');
-// Review.find({})
-//   .limit(5)
-//   .exec((err, reviews) => {
-//     if (err) { return console.error(err) }
-//     console.log(reviews);
-//   });
+
 const reviewsPhotosSchema = new mongoose.Schema({
   id: String,
   review_id: String,
   url: String
 });
-reviewsPhotosSchema.index({ id: 1 });
-reviewsPhotosSchema.index({ review_id: 1 });
+// reviewsPhotosSchema.index({ id: 1 });
+// reviewsPhotosSchema.index({ review_id: 1 });
 const ReviewPhoto = mongoose.model('ReviewPhoto', reviewsPhotosSchema, 'reviews_photos');
-//
+
 const characteristicsSchema = new mongoose.Schema({
   id: String,
   product_id: String,
   name: String
 });
-characteristicsSchema.index({ id: 1 })
-characteristicsSchema.index({ product_id: 1 });
+// characteristicsSchema.index({ id: 1 })
+// characteristicsSchema.index({ product_id: 1 });
 const Characteristic = mongoose.model('Characteristic', characteristicsSchema, 'characteristics');
+
 const characteristicReviewsSchema = new mongoose.Schema({
   id: String,
   review_id: String,
   characteristic_id: String,
   value: String
 });
-characteristicReviewsSchema.index({ id: 1 });
-characteristicReviewsSchema.index({ review_id: 1 });
-characteristicReviewsSchema.index({ characteristic_id: 1 });
+// characteristicReviewsSchema.index({ id: 1 });
+// characteristicReviewsSchema.index({ review_id: 1 });
+// characteristicReviewsSchema.index({ characteristic_id: 1 });
 const CharacteristicReview = mongoose.model('CharacteristicReview', characteristicReviewsSchema, 'characteristic_reviews');
 
+// Review.aggregate([
+//   { $group: { _id: '$product_id', reviews: { $push: '$id' } } },
+//   { $out: { db: 'sdc_deploy', coll: 'products_to_reviews' } }
+//   ])
+//   .option({ allowDiskUse: true, maxTimeMS: 900000 })
+//   .then((res) => {
+//     console.log('"product_to_reviews" collection build success: ', res);
+//   })
+//   .catch((err) => {
+//     console.error('ERROR! "product_to_reviews" collection build ERROR: ', err);
+//   });
+const productsToReviewsSchema = new mongoose.Schema({
+  _id: String,
+  reviews: [String]
+});
+const ProductToReviews = mongoose.model('ProductToReviews', productsToReviewsSchema, 'products_to_reviews');
+// ProductToReviews.find({})
+//   .limit(3)
+//   .exec((err, res) => {
+//     if (err) { return console.error('ERROR! ProductToReviews 3 docs check ERROR: ', err); }
+//     console.log('ProductToReviews 3 docs check success: ', res);
+//   });
+
+// ReviewPhoto.aggregate([
+//   { $group: {_id: '$review_id', photos: { $push: '$id' } } },
+//   { $out: { db: 'sdc_deploy', coll: 'reviews_to_photos' } }
+//   ])
+//   .option({ allowDiskUse: true, maxTimeMS: 900000 })
+//   .then((res) => {
+//     console.log('"reviews_to_photos" collection build success: ', res);
+//   })
+//   .catch((err) => {
+//     console.error('ERROR! "reviews_to_photos" collection build ERROR: ', err);
+//   });
+const reviewsToPhotosSchema = new mongoose.Schema({
+  _id: String,
+  photos: [String]
+});
+const ReviewToPhotos = mongoose.model('ReviewToPhotos', reviewsToPhotosSchema, 'reviews_to_photos');
+// ReviewToPhotos.find({})
+//   .limit(3)
+//   .exec((err, res) => {
+//     if (err) { return console.error('ERROR! ReviewToPhotos 3 docs check ERROR: ', err); }
+//     console.log('ReviewToPhotos 3 docs check success: ', res);
+//   });
 
 module.exports = {
   db: db
 }
+
+// OLD PLAN //
 
 // var productSchema = new mongoose.Schema({
 //   product: String,
