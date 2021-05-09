@@ -18,7 +18,7 @@ db.once('open', function() {
 
 
 
-////////////////////////////////////////////////// MODELS //////////////////////////////////////////////////
+////////////////////////////////////////////////// MODELS (CURRENTLY WITH INDEXING AND AGGREGATION INITIALIZATION) //////////////////////////////////////////////////
 
 const reviewsSchema = new mongoose.Schema({
   id: Number,
@@ -190,7 +190,6 @@ const CharacteristicToCharacteristicReviews = mongoose.model('CharacteristicToCh
 
 
 
-
 ////////////////////////////////////////////////// CONTROLLERS //////////////////////////////////////////////////
 
 const reviewsQuery = async (productId, page, count, sort) => {
@@ -231,14 +230,14 @@ const reviewsQuery = async (productId, page, count, sort) => {
   return await result;
 };
 // How to invoke and receive the reviewsQuery output.
-reviewsQuery(4)
-  .then(result => {
-    console.log('QUERY FINISHED:', result);
-    console.log('reviewsResponse Length: ', result.reviewsResponse.length);
-    console.log('reviewsPhotosResponse Keys Length: ', Object.keys(result.reviewsPhotosResponse).length);
-    console.log('reviewsPhotosResponse Values Length: ', Object.values(result.reviewsPhotosResponse).length);
-    console.log('reviewsPhotosResponse Object: ', result.reviewsPhotosResponse);
-  });
+// reviewsQuery(4)
+//   .then(result => {
+//     console.log('QUERY FINISHED:', result);
+//     console.log('reviewsResponse Length: ', result.reviewsResponse.length);
+//     console.log('reviewsPhotosResponse Keys Length: ', Object.keys(result.reviewsPhotosResponse).length);
+//     console.log('reviewsPhotosResponse Values Length: ', Object.values(result.reviewsPhotosResponse).length);
+//     console.log('reviewsPhotosResponse Object: ', result.reviewsPhotosResponse);
+//   });
 
 module.exports = {
   db: db,
@@ -248,7 +247,7 @@ module.exports = {
 
 
 
-// OLD PLAN //
+////////////////////////////////////////////////// OLD PLAN //////////////////////////////////////////////////
 
 // var productSchema = new mongoose.Schema({
 //   product: String,
