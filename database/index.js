@@ -205,7 +205,7 @@ const reviewsQuery = async (productId, page, count, sort) => {
       const reviewPromises = reviews.map(reviewId => Review.findOne({ id: reviewId }));
       const reviewResults = await Promise.all(reviewPromises)
         .then(dataTwo => dataTwo)
-        .catch(errTwo => console.log('Error looking up reviews after reviews by product query: ', errTwo));
+        .catch(errTwo => console.log('[database/index.js_line:208] Error looking up reviews after reviews by product query: ', errTwo));
       const reviewPhotosIdsPromises = reviews.map(reviewId => ReviewToPhotos.findOne({ _id: reviewId }));
       const reviewPhotosResults = await Promise.all(reviewPhotosIdsPromises)
         .then(async dataThree => {
@@ -215,18 +215,18 @@ const reviewsQuery = async (productId, page, count, sort) => {
             let reviewPhotosFindPromises = photosIds.photos.map(id => ReviewPhoto.findOne({ id: id }));
             let reviewPhotosFind = await Promise.all(reviewPhotosFindPromises)
               .then(dataFour => dataFour)
-              .catch(errFour => console.error('Error looking up photos after photos by review query: ', errFour));
+              .catch(errFour => console.error('[database/index.js_line:218] Error looking up photos after photos by review query: ', errFour));
             photosFind[photosIds._id] = reviewPhotosFind;
           }
           return await photosFind;
         })
         .then(dataFive => dataFive)
-        .catch(errThree => console.error('Error looking up photos by review: ', errThree))
+        .catch(errThree => console.error('[database/index.js_line:224] Error looking up photos by review: ', errThree));
       responseData.reviewsResponse = reviewResults;
       responseData.reviewsPhotosResponse = reviewPhotosResults;
       return await responseData;
     })
-    .catch(errOne => console.error('Error looking up reviews by product: ', errOne));
+    .catch(errOne => console.error('[database/index.js_line:229] Error looking up reviews by product: ', errOne));
   return await result;
 };
 // How to invoke and receive the reviewsQuery output.
