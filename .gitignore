@@ -105,3 +105,6 @@ dist
 
 # csv data
 csv_data/
+
+# sample old API results
+sampleData.js
