@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "csv-reviews-import": "mongoimport --db=sdc_deploy --collection=reviews  --type=csv --headerline --file=./csv_data/reviews.csv" ,
-    "csv-reviews_photos-import": "mongoimport --db=sdc_deploy --collection=reviews_photos  --type=csv --headerline --file=./csv_data/reviews_photos.csv" ,
-    "csv-characteristics-import": "mongoimport --db=sdc_deploy --collection=characteristics  --type=csv --headerline --file=./csv_data/characteristics.csv" ,
+    "csv-reviews-import": "mongoimport --db=sdc_deploy --collection=reviews  --type=csv --headerline --file=./csv_data/reviews.csv",
+    "csv-reviews_photos-import": "mongoimport --db=sdc_deploy --collection=reviews_photos  --type=csv --headerline --file=./csv_data/reviews_photos.csv",
+    "csv-characteristics-import": "mongoimport --db=sdc_deploy --collection=characteristics  --type=csv --headerline --file=./csv_data/characteristics.csv",
     "csv-characteristic-reviews-import": "mongoimport --db=sdc_deploy --collection=characteristic_reviews  --type=csv --headerline --file=./csv_data/characteristic_reviews.csv",
     "bulk-import": "npm run csv-reviews-import && npm run csv-reviews_photos-import && npm run csv-characteristics-import && npm run csv-characteristic-reviews-import"
   },
@@ -40,5 +40,10 @@
   "homepage": "https://github.com/Team-Venus/sdc-atelier-ratings-and-reviews#readme",
   "dependencies": {
     "mongoose": "^5.12.7"
+  },
+  "devDependencies": {
+    "eslint": "^7.26.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
   }
 }

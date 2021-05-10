@@ -1,25 +1,19 @@
-////////////////////////////////////////////////// INITIALIZE/CONNECTION //////////////////////////////////////////////////
+// INITIALIZE/CONNECTION
 
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/sdc_deploy', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex: true
+  useCreateIndex: true,
 });
 
 const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'database connection error:'));
-db.once('open', function() {
-  console.log('successful database connection');
-});
+db.once('open', () => console.log('successful database connection'));
 
-
-
-
-////////////////////////////////////////////////// MODELS (CURRENTLY WITH INDEXING AND AGGREGATION INITIALIZATION) //////////////////////////////////////////////////
-
+// MODELS (CURRENTLY WITH INDEXING AND AGGREGATION INITIALIZATION)
 const reviewsSchema = new mongoose.Schema({
   id: Number,
   product_id: Number,
@@ -32,7 +26,7 @@ const reviewsSchema = new mongoose.Schema({
   reviewer_name: String,
   reviewer_email: String,
   response: String,
-  helpfulness: Number
+  helpfulness: Number,
 });
 // reviewsSchema.index({ id: 1 });
 // reviewsSchema.index({ product_id: 1 });
@@ -41,7 +35,7 @@ const Review = mongoose.model('Review', reviewsSchema, 'reviews');
 const reviewsPhotosSchema = new mongoose.Schema({
   id: Number,
   review_id: Number,
-  url: String
+  url: String,
 });
 // reviewsPhotosSchema.index({ id: 1 });
 // reviewsPhotosSchema.index({ review_id: 1 });
@@ -50,7 +44,7 @@ const ReviewPhoto = mongoose.model('reviews_photos', reviewsPhotosSchema, 'revie
 const characteristicsSchema = new mongoose.Schema({
   id: String,
   product_id: String,
-  name: String
+  name: String,
 });
 // characteristicsSchema.index({ id: 1 })
 // characteristicsSchema.index({ product_id: 1 });
@@ -60,7 +54,7 @@ const characteristicReviewsSchema = new mongoose.Schema({
   id: String,
   review_id: String,
   characteristic_id: String,
-  value: String
+  value: String,
 });
 // characteristicReviewsSchema.index({ id: 1 });
 // characteristicReviewsSchema.index({ review_id: 1 });
@@ -80,7 +74,7 @@ const CharacteristicReview = mongoose.model('CharacteristicReview', characterist
 //   });
 const productsToReviewsSchema = new mongoose.Schema({
   _id: Number,
-  reviews: [Number]
+  reviews: [Number],
 });
 const ProductToReviews = mongoose.model('ProductToReviews', productsToReviewsSchema, 'products_to_reviews');
 // ProductToReviews.find({})
@@ -103,7 +97,7 @@ const ProductToReviews = mongoose.model('ProductToReviews', productsToReviewsSch
 //   });
 const reviewsToPhotosSchema = new mongoose.Schema({
   _id: Number,
-  photos: [Number]
+  photos: [Number],
 });
 const ReviewToPhotos = mongoose.model('reviews_to_photos', reviewsToPhotosSchema, 'reviews_to_photos');
 // ReviewToPhotos.find({})
@@ -126,13 +120,15 @@ const ReviewToPhotos = mongoose.model('reviews_to_photos', reviewsToPhotosSchema
 //   });
 const productsToCharacteristicsSchema = new mongoose.Schema({
   _id: String,
-  characteristics: [String]
+  characteristics: [String],
 });
 const ProductToCharacteristics = mongoose.model('ProductToCharacteristics', productsToCharacteristicsSchema, 'products_to_characteristics');
 // ProductToCharacteristics.find({})
 //   .limit(3)
 //   .exec((err, res) => {
-//     if (err) { return console.error('ERROR! ProductToCharacteristics 3 docs check ERROR: ', err); }
+//     if (err) {
+//       return console.error('ERROR! ProductToCharacteristics 3 docs check ERROR: ', err);
+//     }
 //     console.log('ProductToCharacteristics 3 docs check success: ', res);
 //   });
 
@@ -149,48 +145,62 @@ const ProductToCharacteristics = mongoose.model('ProductToCharacteristics', prod
 //   });
 const reviewsToCharacteristicReviewsSchema = new mongoose.Schema({
   _id: String,
-  characteristic_reviews: [String]
+  characteristic_reviews: [String],
 });
 const ReviewToCharacteristicReviews = mongoose.model('ReviewToCharacteristicReviews', reviewsToCharacteristicReviewsSchema, 'reviews_to_characteristic_reviews');
 // ReviewToCharacteristicReviews.find({})
 //   .limit(3)
 //   .exec((err, res) => {
-//     if (err) { return console.error('ERROR! ReviewToCharacteristicReviews 3 docs check ERROR: ', err); }
+//     if (err) {
+//       return console.error('ERROR! ReviewToCharacteristicReviews 3 docs check ERROR: ', err);
+//     }
 //     console.log('ReviewToCharacteristicReviews 3 docs check success: ', res);
 //   });
 
 // Characteristic.aggregate([
-//     { $lookup: { from: 'characteristic_reviews', localField: 'id', foreignField: 'characteristic_id', as: 'characteristic_reviews'} },
-//     { $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ '$characteristic_reviews', 0 ] }, '$$ROOT' ] } } },
-//     { $group: {_id: '$review_id', characteristic_reviews: { $push: '$id' } } },
-//     { $out: { db: 'sdc_deploy', coll: 'characteristics_to_characteristic_reviews' } }
-//   ])
+//   {
+//     $lookup: {
+//       from: 'characteristic_reviews',
+//       localField: 'id',
+//       foreignField: 'characteristic_id',
+//       as: 'characteristic_reviews',
+//     },
+//   },
+//   {
+//     $replaceRoot: {
+//       newRoot: {
+//         $mergeObjects: [{ $arrayElemAt: ['$characteristic_reviews', 0] }, '$$ROOT'],
+//       },
+//     },
+//   },
+//   { $group: { _id: '$review_id', characteristic_reviews: { $push: '$id' } } },
+//   { $out: { db: 'sdc_deploy', coll: 'characteristics_to_characteristic_reviews' } },
+// ])
 //   .option({ allowDiskUse: true, maxTimeMS: 1800000 })
 //   .then((res) => {
 //     console.log('"characteristics_to_characteristic_reviews" collection build success: ', res);
 //   })
 //   .catch((err) => {
-//     console.error('ERROR! "characteristics_to_characteristic_reviews" collection build ERROR: ', err);
+//     console.error('ERROR! "characteristics_to_characteristic_reviews" collection build: ', err);
 //   });
 const characteristicsToCharacteristicReviewsSchema = new mongoose.Schema({
   _id: String,
-  characteristic_reviews: [String]
+  characteristic_reviews: [String],
 });
 const CharacteristicToCharacteristicReviews = mongoose.model('CharacteristicToCharacteristicReviews', characteristicsToCharacteristicReviewsSchema, 'characteristics_to_characteristic_reviews');
-// CharacteristicToCharacteristicReviews.deleteOne({ _id: null }, (err) => {
-//   if (err) { console.error('The delete query for the weird _id "null" with giant array did not work: ', err); }
-// });
-// CharacteristicToCharacteristicReviews.find({})
-//   .limit(3)
-//   .exec((err, res) => {
-//     if (err) { return console.error('ERROR! CharacteristicToCharacteristicReviews 3 docs check ERROR: ', err); }
-//     console.log('CharacteristicToCharacteristicReviews 3 docs check success: ', res);
-//   });
+CharacteristicToCharacteristicReviews.deleteOne({ _id: null }, (err) => {
+  if (err) {
+    console.error('The delete query for the weird _id "null" with giant array did not work: ', err);
+  }
+});
+CharacteristicToCharacteristicReviews.find({})
+  .limit(3)
+  .exec((err, res) => {
+    if (err) { return console.error('ERROR! CharacteristicToCharacteristicReviews 3 docs check ERROR: ', err); }
+    return console.log('CharacteristicToCharacteristicReviews 3 docs check success: ', res);
+  });
 
-
-
-
-////////////////////////////////////////////////// CONTROLLERS //////////////////////////////////////////////////
+// CONTROLLERS
 
 const reviewsQuery = async (productId, page, count, sort) => {
   // productId required
@@ -199,55 +209,59 @@ const reviewsQuery = async (productId, page, count, sort) => {
   // sort results by newest, helpful or relevant
   const promiseQuery = ProductToReviews.findOne({ _id: productId });
   const result = promiseQuery
-    .then(async dataOne => {
+    .then(async (dataOne) => {
       const { reviews } = dataOne;
       const responseData = {};
-      const reviewPromises = reviews.map(reviewId => Review.findOne({ id: reviewId }));
+      const reviewPromises = reviews.map((reviewId) => Review.findOne({ id: reviewId }));
       const reviewResults = await Promise.all(reviewPromises)
-        .then(dataTwo => dataTwo)
-        .catch(errTwo => console.error('[database/index.js_line:208] Error looking up reviews after reviews by product query: ', errTwo));
-      const reviewPhotosIdsPromises = reviews.map(reviewId => ReviewToPhotos.findOne({ _id: reviewId }));
+        .then((dataTwo) => dataTwo)
+        .catch((errTwo) => {
+          console.error('database/index.js_line:208 Err: look up reviews after reviews by product: ', errTwo);
+        });
+      const reviewPhotosIdsPromises = reviews.map((id) => ReviewToPhotos.findOne({ _id: id }));
       const reviewPhotosResults = await Promise.all(reviewPhotosIdsPromises)
-        .then(async dataThree => {
+        .then(async (dataThree) => {
           const photosFind = {};
           for (let photosIds of dataThree) {
             if (!photosIds) { continue; } // removes nulls
-            let reviewPhotosFindPromises = photosIds.photos.map(id => ReviewPhoto.findOne({ id: id }));
-            let reviewPhotosFind = await Promise.all(reviewPhotosFindPromises)
-              .then(dataFour => dataFour)
-              .catch(errFour => console.error('[database/index.js_line:218] Error looking up photos after photos by review query: ', errFour));
-            photosFind[photosIds._id] = reviewPhotosFind;
+            let photosFindPromises = photosIds.photos.map((id) => ReviewPhoto.findOne({ id }));
+            let photosFind = await Promise.all(photosFindPromises)
+              .then((dataFour) => dataFour)
+              .catch((errFour) => {
+                console.error('database/index.js_line:218 Err: look up photos after photos by review: ', errFour);
+              });
+            photosFind[photosIds._id] = photosFind;
           }
           return await photosFind;
         })
-        .then(dataFive => dataFive)
-        .catch(errThree => console.error('[database/index.js_line:224] Error looking up photos by review: ', errThree));
+        .then((dataFive) => dataFive)
+        .catch((errThree) => {
+          console.error('database/index.js_line:224 Err: look up photos by review: ', errThree);
+        });
       responseData.reviewsResponse = reviewResults;
       responseData.reviewsPhotosResponse = reviewPhotosResults;
       return await responseData;
     })
-    .catch(errOne => console.error('[database/index.js_line:229] Error looking up reviews by product: ', errOne));
+    .catch((errOne) => {
+      console.error('database/index.js_line:229 Err: look up reviews by product: ', errOne);
+    });
   return await result;
 };
 // How to invoke and receive the reviewsQuery output.
-// reviewsQuery(4)
+// reviewsQuery(4) // returns a promise, then-able and catch-able
 //   .then(result => {
 //     console.log('QUERY FINISHED:', result);
 //     console.log('reviewsResponse Length: ', result.reviewsResponse.length);
-//     console.log('reviewsPhotosResponse Keys Length: ', Object.keys(result.reviewsPhotosResponse).length);
-//     console.log('reviewsPhotosResponse Values Length: ', Object.values(result.reviewsPhotosResponse).length);
-//     console.log('reviewsPhotosResponse Object: ', result.reviewsPhotosResponse);
+//     console.log('photosResponse Length: ', Object.keys(result.reviewsPhotosResponse).length);
+//     console.log('photosResponse Object: ', result.reviewsPhotosResponse);
 //   });
 
 module.exports = {
-  db: db,
-  reviewsQuery: reviewsQuery
-}
+  db,
+  reviewsQuery,
+};
 
-
-
-
-////////////////////////////////////////////////// OLD PLAN //////////////////////////////////////////////////
+// OLD PLAN
 
 // var productSchema = new mongoose.Schema({
 //   product: String,
@@ -262,8 +276,8 @@ module.exports = {
 //     reviewer_name: String,
 //     helpfulness: Number,
 //     photos: [{
-//      id: Number,
-//      url: String
+//       id: Number,
+//       url: String
 //     }],
 //   }],
 //   reviews_meta: {
