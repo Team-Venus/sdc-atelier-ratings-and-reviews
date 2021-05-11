@@ -123,9 +123,9 @@ const utilMetaDataParser = async (productDataQueryData) => {
   return parse;
 };
 
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
+// app.get('/', (req, res) => {
+//   res.send('Hello World');
+// });
 
 app.get('/reviews', async (req, res) => {
   const { product_id } = req.query;
@@ -143,6 +143,15 @@ app.get('/reviews/meta/', async (req, res) => {
   const productDataQueryResult = await productDataQuery(product_id);
   const metaDataBuild = await utilMetaDataParser(productDataQueryResult);
   res.send(metaDataBuild);
+  res.end();
+});
+
+app.post('/reviews', async (req, res) => {
+  const { body } = req;
+  const { product_id } = body;
+  console.log(`incoming post review request for product_id: ${product_id}`);
+  console.log(body);
+
   res.end();
 });
 

@@ -108,3 +108,6 @@ csv_data/
 
 # task list
 jonathanList
+
+# any .pem
+*.pem
