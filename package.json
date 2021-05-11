@@ -9,7 +9,8 @@
     "csv-reviews_photos-import": "mongoimport --db=sdc_deploy --collection=reviews_photos  --type=csv --headerline --file=./csv_data/reviews_photos.csv",
     "csv-characteristics-import": "mongoimport --db=sdc_deploy --collection=characteristics  --type=csv --headerline --file=./csv_data/characteristics.csv",
     "csv-characteristic-reviews-import": "mongoimport --db=sdc_deploy --collection=characteristic_reviews  --type=csv --headerline --file=./csv_data/characteristic_reviews.csv",
-    "bulk-import": "npm run csv-reviews-import && npm run csv-reviews_photos-import && npm run csv-characteristics-import && npm run csv-characteristic-reviews-import"
+    "bulk-import": "npm run csv-reviews-import && npm run csv-reviews_photos-import && npm run csv-characteristics-import && npm run csv-characteristic-reviews-import",
+    "start:dev": "nodemon server/index.js"
   },
   "repository": {
     "type": "git",
@@ -39,7 +40,10 @@
   },
   "homepage": "https://github.com/Team-Venus/sdc-atelier-ratings-and-reviews#readme",
   "dependencies": {
-    "mongoose": "^5.12.7"
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.7",
+    "nodemon": "^2.0.7"
   },
   "devDependencies": {
     "eslint": "^7.26.0",

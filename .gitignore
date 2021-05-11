@@ -106,5 +106,5 @@ dist
 # csv data
 csv_data/
 
-# sample old API results
-sampleData.js
+# task list
+jonathanList
