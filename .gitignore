@@ -102,3 +102,12 @@ dist
 
 # TernJS port file
 .tern-port
+
+# csv data
+csv_data/
+
+# task list
+jonathanList
+
+# any .pem
+*.pem
