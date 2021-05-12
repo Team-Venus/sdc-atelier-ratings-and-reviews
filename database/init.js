@@ -78,12 +78,6 @@ const productsToReviewsSchema = new mongoose.Schema({
   reviews: [Number],
 });
 const ProductToReviews = mongoose.model('ProductToReviews', productsToReviewsSchema, 'products_to_reviews');
-// ProductToReviews.find({})
-//   .limit(3)
-//   .exec((err, res) => {
-//     if (err) { return console.error('ERROR! ProductToReviews 3 docs check ERROR: ', err); }
-//     return console.log('ProductToReviews 3 docs check success: ', res);
-//   });
 
 ReviewPhoto.aggregate([
   { $group: { _id: '$review_id', photos: { $push: '$id' } } },
@@ -101,12 +95,6 @@ const reviewsToPhotosSchema = new mongoose.Schema({
   photos: [Number],
 });
 const ReviewToPhotos = mongoose.model('reviews_to_photos', reviewsToPhotosSchema, 'reviews_to_photos');
-// ReviewToPhotos.find({})
-//   .limit(3)
-//   .exec((err, res) => {
-//     if (err) { return console.error('ERROR! ReviewToPhotos 3 docs check ERROR: ', err); }
-//     return console.log('ReviewToPhotos 3 docs check success: ', res);
-//   });
 
 Characteristic.aggregate([
   { $group: { _id: '$product_id', characteristics: { $push: '$id' } } },
@@ -124,14 +112,6 @@ const productsToCharacteristicsSchema = new mongoose.Schema({
   characteristics: [Number],
 });
 const ProductToCharacteristics = mongoose.model('ProductToCharacteristics', productsToCharacteristicsSchema, 'products_to_characteristics');
-// ProductToCharacteristics.find({})
-//   .limit(3)
-//   .exec((err, res) => {
-//     if (err) {
-//       return console.error('ERROR! ProductToCharacteristics 3 docs check ERROR: ', err);
-//     }
-//     return console.log('ProductToCharacteristics 3 docs check success: ', res);
-//   });
 
 CharacteristicReview.aggregate([
   { $group: { _id: '$review_id', characteristic_reviews: { $push: '$id' } } },
@@ -149,14 +129,6 @@ const reviewsToCharacteristicReviewsSchema = new mongoose.Schema({
   characteristic_reviews: [Number],
 });
 const ReviewToCharacteristicReviews = mongoose.model('ReviewToCharacteristicReviews', reviewsToCharacteristicReviewsSchema, 'reviews_to_characteristic_reviews');
-// ReviewToCharacteristicReviews.find({})
-//   .limit(3)
-//   .exec((err, res) => {
-//     if (err) {
-//       return console.error('ERROR! ReviewToCharacteristicReviews 3 docs check ERROR: ', err);
-//     }
-//     console.log('ReviewToCharacteristicReviews 3 docs check success: ', res);
-//   });
 
 Characteristic.aggregate([
   {
@@ -195,11 +167,3 @@ const characteristicsToCharacteristicReviewsSchema = new mongoose.Schema({
   characteristic_reviews: [Number],
 });
 const CharacteristicToCharacteristicReviews = mongoose.model('CharacteristicToCharacteristicReviews', characteristicsToCharacteristicReviewsSchema, 'characteristics_to_characteristic_reviews');
-// CharacteristicToCharacteristicReviews.find({})
-//   .limit(3)
-//   .exec((err, res) => {
-//     if (err) {
-//       return console.error('ERROR! CharacteristicToCharacteristicReviews 3 docs check: ', err);
-//     }
-//     return console.log('CharacteristicToCharacteristicReviews 3 docs check success: ', res);
-//   });

@@ -10,6 +10,9 @@
     "csv-characteristics-import": "mongoimport --db=sdc_deploy --collection=characteristics  --type=csv --headerline --file=./csv_data/characteristics.csv",
     "csv-characteristic-reviews-import": "mongoimport --db=sdc_deploy --collection=characteristic_reviews  --type=csv --headerline --file=./csv_data/characteristic_reviews.csv",
     "bulk-import": "npm run csv-reviews-import && npm run csv-reviews_photos-import && npm run csv-characteristics-import && npm run csv-characteristic-reviews-import",
+    "db:init": "node ./database/init.js",
+    "db:test": "node ./database/index.test.js",
+    "server:test": "node ./server/index.test.js",
     "start:dev": "nodemon server/index.js"
   },
   "repository": {

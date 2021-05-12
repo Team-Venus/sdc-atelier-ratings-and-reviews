@@ -152,12 +152,6 @@ const productDataQuery = async (productId) => {
       const charRevsProms = reviews.map((id) => ReviewToCharacteristicReviews.findOne({ _id: id }));
       const charRevsResults = await Promise.all(charRevsProms)
         .then(async (dataFive) => {
-          // [
-          //   { characteristic_reviews: [ 18, 19, 21, 20 ], _id: 9 },
-          //   { characteristic_reviews: [ 22, 23, 24, 25 ], _id: 10 },
-          //   { characteristic_reviews: [ 14, 15, 16, 17 ], _id: 8 }
-          // ]
-          // chRevsResponse[`${_id}`].dataSix
           const chRevsResponse = {};
           for (let charRevsIdsArray of dataFive) {
             const { characteristic_reviews, _id } = charRevsIdsArray;
@@ -182,88 +176,9 @@ module.exports = {
   db,
   reviewsQuery,
   productDataQuery,
+  ProductToReviews,
+  ReviewToPhotos,
+  ProductToCharacteristics,
+  ReviewToCharacteristicReviews,
+  CharacteristicToCharacteristicReviews,
 };
-
-// OLD PLAN
-
-// var productSchema = new mongoose.Schema({
-//   product: String,
-//   reviews: [{
-//     review_id: Number,
-//     rating: Number,
-//     summary: String,
-//     recommended: Boolean,
-//     response: String,
-//     body: String,
-//     date: String,
-//     reviewer_name: String,
-//     helpfulness: Number,
-//     photos: [{
-//       id: Number,
-//       url: String
-//     }],
-//   }],
-//   reviews_meta: {
-//     ratings: {
-//       1: String,
-//       2: String,
-//       3: String,
-//       4: String,
-//       5: String
-//     },
-//     recommended: {
-//       false: String,
-//       true: String
-//     },
-//     characteristics: {
-//       Fit: {
-//         id: Number,
-//         value: String,
-//         count: Number
-//       },
-//       Length: {
-//         id: Number,
-//         value: String,
-//         count: Number
-//       },
-//       Comfort: {
-//         id: Number,
-//         value: String,
-//         count: Number
-//       },
-//       Quality: {
-//         id: Number,
-//         value: String,
-//         count: Number
-//       },
-//       Width: {
-//         id: Number,
-//         value: String,
-//         count: Number
-//       },
-//       Size: {
-//         id: Number,
-//         value: String,
-//         count: Number
-//       }
-//     }
-//   }
-// });
-
-// var Product = mongoose.model('Product', productSchema);
-
-// // Simple Tests //
-// // Create
-// var test = new Product({
-//   product: '1'
-// });
-// // Save w/ error
-// test.save(err => {
-//   if (err) { return console.error(err) }
-// });
-// // List of all Product documents w/ error
-// Product.find((err, products) => {
-//   if (err) { return console.error(err) }
-//   console.log(products);
-// });
-// // End of Simple Tests //
