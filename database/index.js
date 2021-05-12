@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://3.142.222.91:27017/sdc_deploy', {
+mongoose.connect('mongodb://localhost/sdc_deploy', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
@@ -16,8 +16,8 @@ db.once('open', () => console.log('successful database connection'));
 // MODELS
 
 const reviewsSchema = new mongoose.Schema({
-  id: Number,
-  product_id: Number,
+  id: { type: Number, unique: true, index: true },
+  product_id: { type: Number, index: true },
   rating: Number,
   date: String,
   summary: String,
@@ -95,9 +95,7 @@ const reviewsQuery = async (productId) => {
       const reviewPromises = reviews.map((reviewId) => Review.findOne({ id: reviewId }));
       const reviewResults = await Promise.all(reviewPromises)
         .then((dataTwo) => dataTwo)
-        .catch((errTwo) => {
-          console.error('Err: look up reviews after reviews by product: ', errTwo);
-        });
+        .catch((errTwo) => `Err: look up reviews after reviews by product: ${errTwo}`);
       const reviewPhotosIdsPromises = reviews.map((id) => ReviewToPhotos.findOne({ _id: id }));
       const reviewPhotosResults = await Promise.all(reviewPhotosIdsPromises)
         .then(async (dataThree) => {
@@ -107,24 +105,18 @@ const reviewsQuery = async (productId) => {
             const photosFindPromises = photoIds.photos.map((id) => ReviewPhoto.findOne({ id }));
             const photosFindQuery = await Promise.all(photosFindPromises)
               .then((dataFour) => dataFour)
-              .catch((errFour) => {
-                console.error('Err: look up photos after photos by review: ', errFour);
-              });
+              .catch((errFour) => `Err: look up photos after photos by review: ${errFour}`);
             photosFind[photoIds._id] = photosFindQuery;
           }
           return await photosFind;
         })
         .then((dataFive) => dataFive)
-        .catch((errThree) => {
-          console.error('Err: look up photos by review: ', errThree);
-        });
+        .catch((errThree) => `Err: look up photos by review: ${errThree}`);
       responseData.reviewsResponse = reviewResults;
       responseData.reviewsPhotosResponse = reviewPhotosResults;
       return await responseData;
     })
-    .catch((errOne) => {
-      console.error('Err: look up reviews by product: ', errOne);
-    });
+    .catch((errOne) => `Err: look up reviews by product: ${errOne}`);
   return await result;
 };
 
@@ -158,7 +150,7 @@ const productDataQuery = async (productId) => {
             const proms = characteristic_reviews.map((id) => CharacteristicReview.findOne({ id }));
             const chRevsResults = await Promise.all(proms)
               .then((dataSix) => chRevsResponse[`${_id}`] = dataSix)
-              .catch((errSix) => `productDataQuery ERROR: look up characteristics by their ids: ${errSix}` );
+              .catch((errSix) => `productDataQuery ERROR: look up characteristics by their ids: ${errSix}`);
           }
           return chRevsResponse;
         })
@@ -172,10 +164,71 @@ const productDataQuery = async (productId) => {
   return result;
 };
 
+// toReviewsCollection: {
+//   id: *DONE*,
+//   product_id: 17069,
+//   rating: 0,
+//   date: '2021-05-12T06:01:56.291Z',
+//   summary: 'alsfudcna,sufhsnalf,sudcbd,cjhWaDHnlieufewhwrNLF,IUSJGBFCKA,',
+//   body: 'dgergeth',
+//   recommend: false,
+//   reported: false,
+//   reviewer_name: 'fkagurfuyg',
+//   reviewer_email: 'ian@flg.com',
+//   response: null,
+//   helpfulness: 0,
+// },
+// toPhotosCollectionArray: [
+//   {
+//     id: *DONE*,
+//     review_id: *DONE*,
+//     url: 'blob:http://localhost:3000/8e4f6cad-c28c-4e9e-961a-db59ea12af44',
+//   },
+// ],
+// toCharCollectionArray: [{ id: '57226', product_id: 17069, name: *FILL_ME_IN* }],
+// toCharRevsArray: [{ id: *FILL_ME_IN*, review_id: *DONE*, characteristic_id: '57226', value: 4 }],
+const postReviewToDB = async (postSemiParsed) => {
+  const {
+    toReviewsCollection,
+    toPhotosCollectionArray,
+    toCharCollectionArray,
+    toCharRevsArray,
+  } = postSemiParsed;
+
+  const lastReview = await Review.find({}).sort({ id: -1 }).limit(1);
+  const lastPossibleReviewId = lastReview[0].id + 1;
+  toReviewsCollection.id = lastPossibleReviewId;
+
+  let photoCounter = 1;
+  const lastPhoto = await ReviewPhoto.find({}).sort({ id: -1 }).limit(1);
+  const lastPhotoId = lastPhoto[0].id;
+  for (let photoObj of toPhotosCollectionArray) {
+    photoObj.review_id = lastPossibleReviewId;
+    const lastPossiblePhotoId = lastPhotoId + photoCounter;
+    photoObj.id = lastPossiblePhotoId;
+    photoCounter += 1;
+  }
+
+  let charCounter = 1;
+  for (let charObj of toCharCollectionArray) {
+
+  }
+
+  let charRevCounter = 1;
+  for (let charRevObj of toCharRevsArray) {
+    charRevObj.review_id = lastPossibleReviewId;
+  }
+
+
+
+  return [toReviewsCollection, toPhotosCollectionArray, toCharCollectionArray, toCharRevsArray];
+};
+
 module.exports = {
   db,
   reviewsQuery,
   productDataQuery,
+  postReviewToDB,
   ProductToReviews,
   ReviewToPhotos,
   ProductToCharacteristics,

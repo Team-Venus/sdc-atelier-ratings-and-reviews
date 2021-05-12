@@ -1,12 +1,14 @@
 const {
   reviewsQuery,
   productDataQuery,
+  postReviewToDB,
   ProductToReviews,
   ReviewToPhotos,
   ProductToCharacteristics,
   ReviewToCharacteristicReviews,
   CharacteristicToCharacteristicReviews,
 } = require('./index.js');
+const { utilPostToDBParse } = require('../server/index.js');
 
 const relationshipTablesTest = () => {
   ProductToReviews.find({})
@@ -46,7 +48,7 @@ const relationshipTablesTest = () => {
       return console.log('CharacteristicToCharacteristicReviews 3 docs check success: ', res);
     });
 };
-relationshipTablesTest();
+// relationshipTablesTest();
 
 const reviewsQueryTest = (productId) => {
   const timeStart = new Date();
@@ -62,7 +64,7 @@ const reviewsQueryTest = (productId) => {
     })
     .catch((error) => console.error(error));
 };
-reviewsQueryTest(4);
+// reviewsQueryTest(4);
 
 const productDataQueryTest = (productId) => {
   const timeStart = new Date();
@@ -75,4 +77,41 @@ const productDataQueryTest = (productId) => {
     })
     .catch((error) => console.error(error));
 };
-productDataQueryTest(4);
+// productDataQueryTest(4);
+
+const postRequiredInfoTest = () => {
+  const testSemiParsedData = {
+    toReviewsCollection: {
+      id: null,
+      product_id: 17069,
+      rating: 0,
+      date: '2021-05-12T06:01:56.291Z',
+      summary: 'alsfudcna,sufhsnalf,sudcbd,cjhWaDHnlieufewhwrNLF,IUSJGBFCKA,',
+      body: 'dgergeth',
+      recommend: false,
+      reported: false,
+      reviewer_name: 'fkagurfuyg',
+      reviewer_email: 'ian@flg.com',
+      response: null,
+      helpfulness: 0,
+    },
+    toPhotosCollectionArray: [
+      {
+        id: null,
+        review_id: null,
+        url: 'blob:http://localhost:3000/8e4f6cad-c28c-4e9e-961a-db59ea12af44',
+      },
+    ],
+    toCharCollectionArray: [{ id: '57226', product_id: 17069, name: null }],
+    toCharRevsArray: [{ id: null, characteristic_id: '57226', value: 4 }],
+  };
+  const timeStart = new Date();
+  postReviewToDB(testSemiParsedData)
+    .then((data) => {
+      const timeElapsed = new Date() - timeStart;
+      console.log('Time for query: ', timeElapsed);
+      console.log('postRequiredInfo data: ', data);
+    })
+    .catch((error) => console.error('postRequiredInfo error: ', error));
+};
+postRequiredInfoTest();
