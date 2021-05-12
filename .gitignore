@@ -111,3 +111,6 @@ jonathanList
 
 # any .pem
 *.pem
+
+# helpful commands
+sshToEC2s
