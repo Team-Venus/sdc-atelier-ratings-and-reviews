@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://127.0.0.1:27017/sdc_deploy', {
+mongoose.connect('mongodb://3.142.222.91:27017/sdc_deploy', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,

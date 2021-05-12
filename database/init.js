@@ -47,7 +47,7 @@ const characteristicsSchema = new mongoose.Schema({
   product_id: Number,
   name: String,
 });
-characteristicsSchema.index({ id: 1 })
+characteristicsSchema.index({ id: 1 });
 characteristicsSchema.index({ product_id: 1 });
 const Characteristic = mongoose.model('Characteristic', characteristicsSchema, 'characteristics');
 
