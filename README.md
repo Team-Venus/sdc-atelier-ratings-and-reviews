@@ -2,13 +2,19 @@
 
 System redesign for Atelier Project Catwalk's Single Product Ratings and Reviews widget.
 
-
-
 # Dependencies
 
 - mongoose
+- express
+- body-parser
 
+## Dev Dependencies:
 
+- eslint
+- nodemon
+- eslint
+- eslint-config-airbnb-base
+- eslint-plugin-import
 
 # Install
 
@@ -16,13 +22,10 @@ System redesign for Atelier Project Catwalk's Single Product Ratings and Reviews
 - cd into project directory
 - npm install
 
-
-
 # Running This Service
 
-- TBA
-
-
+- This is at developer level right now:
+- npm run start:dev
 
 # Tests
 
